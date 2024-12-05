@@ -1,4 +1,4 @@
-# Stardew Wiki System Python Project Documentation
+# Stardew Wiki System Documentation
 ---
 
 ## Overview
