@@ -1,4 +1,8 @@
 dist: focal 
+
+install:
+    - pip install pandas
+
 language: python
 python:
     - "3.12"
