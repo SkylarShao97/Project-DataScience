@@ -1,10 +1,10 @@
 dist: focal 
-
-install:
-    - pip install pandas
-
 language: python
 python:
     - "3.12"
+
+install:
+    - pip install pandas
+    
 script:
     - python stardew_wiki/test_suite.py
