@@ -11,10 +11,28 @@ class RecipeNotFoundError(Exception):
 # Functions for recipe_search
 def list_all_recipes(recipes_df):
     """Lists all recipe names from the Recipes data."""
-    recipes = recipes_df['name_recipe'].tolist()
-    print("Available Recipes:")
-    for recipe in recipes:
-        print(f"- {recipe}")
+    try:
+        # Check if the dataframe is empty
+        if recipes_df.empty:
+            print("No recipes available.")
+            return
+        
+        # Check if the column exists
+        if 'name_recipe' not in recipes_df.columns:
+            raise KeyError("Column 'name_recipe' not found in the dataframe.")
+        
+        # Extract and print recipes
+        recipes = recipes_df['name_recipe'].tolist()
+        print("Available Recipes:")
+        for recipe in recipes:
+            print(f"- {recipe}")
+    
+    except AttributeError:
+        print("Error: Input is not a valid pandas DataFrame.")
+    except KeyError as e:
+        print(f"Error: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
         
 def search_recipe_by_name(recipes_df):
     """Search for a recipe with exception handling"""

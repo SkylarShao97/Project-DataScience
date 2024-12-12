@@ -3,7 +3,6 @@ from unittest.mock import patch
 import pandas as pd
 from recipes.recipe_search import list_all_recipes, search_recipe_by_name, ingredient_details
 
-
 class TestRecipeSearch(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
