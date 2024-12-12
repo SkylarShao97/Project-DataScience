@@ -32,7 +32,14 @@ class CropDatabase:
         Initialize the crop database by loading data from a CSV file.
         """
         self.crops = {}
-        self.load_data_from_csv(csv_file)
+        try:
+            self.load_data_from_csv(csv_file)
+        except FileNotFoundError:
+            print(f"Error: The file '{csv_file}' was not found.")
+        except pd.errors.EmptyDataError:
+            print(f"Error: The file '{csv_file}' is empty.")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
 
     def load_data_from_csv(self, csv_file):
         """
@@ -80,25 +87,29 @@ def input_crop():
     """
     Interactive function for searching crops via a menu.
     """
-    db = CropDatabase("data/Crops.csv")
+    try:
+        # Initialize the database
+        db = CropDatabase("data/Crops.csv")
 
-    while True:
-        print("\nCrop Search Menu:")
-        print("1. Search by Name")
-        print("2. Search by Season")
-        print("3. Exit")
-        choice = input("Enter your choice: ").strip()
-        
-        if choice == "1":
-            name = input("Enter the name of the crop: ").strip()
-            print("\nSearch Result:")
-            print(db.search_by_name(name))
-        elif choice == "2":
-            season = input("Enter the season (Spring/Summer/Fall/Tropical): ").strip()
-            print("\nSearch Result:")
-            print(db.search_by_season(season))
-        elif choice == "3":
-            print("Exiting Crop Search...")
-            break
-        else:
-            print("Invalid choice. Please try again.")
+        while True:
+            print("\nCrop Search Menu:")
+            print("1. Search by Name")
+            print("2. Search by Season")
+            print("3. Exit")
+            choice = input("Enter your choice: ").strip()
+            
+            if choice == "1":
+                name = input("Enter the name of the crop: ").strip()
+                print("\nSearch Result:")
+                print(db.search_by_name(name))
+            elif choice == "2":
+                season = input("Enter the season (Spring/Summer/Fall/Tropical): ").strip()
+                print("\nSearch Result:")
+                print(db.search_by_season(season))
+            elif choice == "3":
+                print("Exiting Crop Search...")
+                break
+            else:
+                print("Invalid choice. Please try again.")
+    except Exception as e:
+        print(f"Critical error: {e}")

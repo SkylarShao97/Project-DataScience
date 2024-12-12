@@ -50,7 +50,14 @@ class AnimalDatabase:
     """
     def __init__(self, csv_file):
         self.animals = {}
-        self.load_data_from_csv(csv_file)
+        try:
+            self.load_data_from_csv(csv_file)
+        except FileNotFoundError:
+            print(f"Error: The file '{csv_file}' was not found.")
+        except pd.errors.EmptyDataError:
+            print(f"Error: The file '{csv_file}' is empty.")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
 
     def load_data_from_csv(self, csv_file):
         # Resolve the path to the current script's directory
@@ -78,7 +85,8 @@ class AnimalDatabase:
                     artisan_price=row["artisan_animal_price"]
                 )
             else:
-                continue  # Skip unknown types
+                print("Cannot find this type. Please try again.")
+                continue  
             self.animals[animal.name] = animal
 
     def search_by_name(self, name):
@@ -102,26 +110,30 @@ def input_animal():
     """
     Interactive function for searching animals via a menu.
     """
-    # Initialize the database
-    db = AnimalDatabase("data/Animals.csv")
+    try:
+        # Initialize the database
+        db = AnimalDatabase("data/Animals.csv")
 
-    while True:
-        print("\nAnimal Search Menu:")
-        print("1. Search by Name")
-        print("2. Search by Type (Barn/Coop)")
-        print("3. Exit")
-        choice = input("Enter your choice: ").strip()
+        while True:
+            print("\nAnimal Search Menu:")
+            print("1. Search by Name")
+            print("2. Search by Type (Barn/Coop)")
+            print("3. Exit")
+            choice = input("Enter your choice: ").strip()
 
-        if choice == "1":
-            name = input("Enter the name of the animal: ").strip()
-            print("\nSearch Result:")
-            print(db.search_by_name(name))
-        elif choice == "2":
-            animal_type = input("Enter the type of animal (Barn/Coop): ").strip()
-            print("\nSearch Result:")
-            print(db.search_by_type(animal_type))
-        elif choice == "3":
-            print("Exiting Animal Search...")
-            break
-        else:
-            print("Invalid choice. Please try again.")
+            if choice == "1":
+                name = input("Enter the name of the animal: ").strip()
+                print("\nSearch Result:")
+                print(db.search_by_name(name))
+            elif choice == "2":
+                animal_type = input("Enter the type of animal (Barn/Coop): ").strip()
+                print("\nSearch Result:")
+                print(db.search_by_type(animal_type))
+            elif choice == "3":
+                print("Exiting Animal Search...")
+                break
+            else:
+                print("Invalid choice. Please try again.")
+    except Exception as e:
+        print(f"Critical error: {e}")
+
