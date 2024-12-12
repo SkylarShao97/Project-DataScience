@@ -1,5 +1,13 @@
 import pandas as pd
 
+class RecipeNotFoundError(Exception):
+    """Custom exception raised when a recipe cannot be found"""
+    def __init__(self, recipe_name):
+        self.recipe_name = recipe_name
+        self.message = f"Recipe '{recipe_name}' not found in the database"
+        super().__init__(self.message)
+
+
 def list_all_ingredients(recipes_df):
     """
     Lists all unique ingredients from the 'ingredients' column.
@@ -58,28 +66,43 @@ def search_recipes_by_ingredients(recipes_df):
         print("No recipe found.")
 
 def suggest_missing_ingredients(recipes_df):
-    """Suggests missing ingredients for a given recipe based on partial ingredients."""
-    recipe_name = input("Enter the name of the recipe: ").strip()
-    recipe = recipes_df[recipes_df['name_recipe'].str.contains(recipe_name, case=False, na=False)]
-    if recipe.empty:
-        print("Recipe not found.")
-        return
+    """Suggest missing ingredients with exception handling"""
+    try:
+        recipe_name = input("Enter the name of the recipe: ").strip()
+        if not isinstance(recipes_df, pd.DataFrame):
+            raise TypeError("Invalid data format: recipes_df must be a pandas DataFrame")
+            
+        recipe = recipes_df[recipes_df['name_recipe'].str.contains(recipe_name, case=False, na=False)]
+        if recipe.empty:
+            raise RecipeNotFoundError(recipe_name)
 
-    full_ingredients = recipe['ingredients'].iloc[0].split(',')
-    full_ingredients = [ingredient.split('(')[0].strip() for ingredient in full_ingredients]
+        full_ingredients = recipe['ingredients'].iloc[0].split(',')
+        full_ingredients = [ingredient.split('(')[0].strip() for ingredient in full_ingredients]
 
-    print("Enter the ingredients you already have (type 'STOP' to finish):")
-    partial_ingredients = []
-    while True:
-        ingredient = input("Enter ingredient: ").strip()
-        if ingredient.lower() == 'stop':
-            break
-        partial_ingredients.append(ingredient)
+        print("Enter the ingredients you already have (type 'STOP' to finish):")
+        partial_ingredients = []
+        while True:
+            ingredient = input("Enter ingredient: ").strip()
+            if ingredient.lower() == 'stop':
+                break
+            partial_ingredients.append(ingredient)
 
-    missing_ingredients = [item for item in full_ingredients if item not in partial_ingredients]
-    if missing_ingredients:
-        print("Missing Ingredients:")
-        for ingredient in missing_ingredients:
-            print(f"- {ingredient}")
-    else:
-        print("You have all the ingredients!")
+        if not partial_ingredients:
+            raise ValueError("No ingredients were provided")
+
+        missing_ingredients = [item for item in full_ingredients if item not in partial_ingredients]
+        if missing_ingredients:
+            print("Missing Ingredients:")
+            for ingredient in missing_ingredients:
+                print(f"- {ingredient}")
+        else:
+            print("You have all the ingredients!")
+            
+    except RecipeNotFoundError as e:
+        print(f"Error: {e}")
+    except ValueError as e:
+        print(f"Error: {e}")
+    except TypeError as e:
+        print(f"Error: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")

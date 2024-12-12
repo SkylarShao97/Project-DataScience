@@ -51,6 +51,7 @@ class TestIngredientSearch(unittest.TestCase):
                 self.assertIn("No recipe found.", output)
 
     def test_suggest_missing_ingredients(self):
+        # Test case 1: Normal case - some missing ingredients
         with patch('builtins.input', side_effect=['Pizza', 'Tomato', 'Wheat Flour', 'STOP']):
             with patch('builtins.print') as mocked_print:
                 suggest_missing_ingredients(self.recipes_df)
@@ -60,18 +61,33 @@ class TestIngredientSearch(unittest.TestCase):
                 self.assertNotIn("Tomato", output)
                 self.assertNotIn("Milk", output)
         
+        # Test case 2: All ingredients present
         with patch('builtins.input', side_effect=['Pizza', 'Tomato', 'Wheat Flour', "Cheese", 'STOP']):
             with patch('builtins.print') as mocked_print:
                 suggest_missing_ingredients(self.recipes_df)
                 output = "\n".join([args[0] for args, _ in mocked_print.call_args_list])
                 self.assertIn("You have all the ingredients!", output)
 
+        # Test case 3: Recipe not found (Garlic)
         with patch('builtins.input', side_effect=['Garlic', 'STOP']):
             with patch('builtins.print') as mocked_print:
                 suggest_missing_ingredients(self.recipes_df)
                 output = "\n".join([args[0] for args, _ in mocked_print.call_args_list])
-                self.assertIn("Recipe not found.", output)
+                self.assertIn("Error: Recipe 'Garlic' not found in the database", output)
+
+        # Test case 4: Invalid DataFrame
+        with patch('builtins.input', side_effect=['Pizza']):
+            with patch('builtins.print') as mocked_print:
+                suggest_missing_ingredients(None)  # Pass None instead of DataFrame
+                output = "\n".join([args[0] for args, _ in mocked_print.call_args_list])
+                self.assertIn("Error: Invalid data format", output)
         
+        # Test case 5: No ingredients were provided
+        with patch('builtins.input', side_effect=['Pizza', 'STOP']):
+            with patch('builtins.print') as mocked_print:
+                suggest_missing_ingredients(self.recipes_df)
+                output = "\n".join([args[0] for args, _ in mocked_print.call_args_list])
+                self.assertIn("Error: No ingredients were provided", output)
 
     @classmethod
     def tearDownClass(cls):

@@ -63,7 +63,7 @@ class TestRecipeSearch(unittest.TestCase):
             with patch('builtins.print') as mocked_print:
                 search_recipe_by_name(self.recipes_df)
                 output = "\n".join([args[0] for args, _ in mocked_print.call_args_list])
-                self.assertIn("Recipe not found.", output)
+                self.assertIn("Error: Recipe 'Garlic Bread' not found in the database", output)
 
     def test_ingredient_details(self):
         # Test for crops
