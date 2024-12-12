@@ -1,6 +1,9 @@
 # Stardew Wiki System Python Project Documentation
 ---
 
+![passing build stamp](https://app.travis-ci.com/SkylarShao97/Stardew-Valley_Wiki.svg?token=ezeqdMKSGNT8hLvHZqTq&branch=main)
+
+
 ## Overview
 The Stardew Wiki System Python project provides a console-based interface to interact with two main categories of information in the game **Stardew Valley**:
 
