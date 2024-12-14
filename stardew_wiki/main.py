@@ -1,5 +1,5 @@
-import recipes.main as recipes_main
-import livingthings.main as livingthings_main
+import stardew_wiki.recipes.main as recipes_main
+import stardew_wiki.livingthings.main as livingthings_main
 
 def main():
     print("Welcome to the Stardew Valley Wiki System!")
