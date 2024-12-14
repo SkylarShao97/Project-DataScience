@@ -3,6 +3,7 @@
 
 ![passing build stamp](https://app.travis-ci.com/SkylarShao97/Stardew-Valley_Wiki.svg?token=ezeqdMKSGNT8hLvHZqTq&branch=main)
 
+PyPI: https://pypi.org/project/Stardew-Valley-Wiki/
 
 ## Overview
 The Stardew Wiki System Python project provides a console-based interface to interact with two main categories of information in the game **Stardew Valley**:
